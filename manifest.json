@@ -1,0 +1,30 @@
+{
+  "manifest_version": 2,
+  "version": "0.0.1",
+  "name": "LDOCE Dictionary",
+  "description": "Select a word or phrase to look up its definition on Longman Dictionary of Contemporary English Online seamlessly.",
+  "author": "Nhân Trí",
+  "icons": {
+    "16": "icon.png",
+    "32": "icon.png",
+    "48": "icon.png",
+    "64": "icon.png",
+    "128": "icon.png",
+    "256": "icon.png"
+  },
+  "background": {"scripts": ["background.js"]},
+  "options_ui": {
+    "page": "options/options.html",
+    "open_in_tab": false
+  },
+  "permissions": [
+    "activeTab",
+    "contextMenus",
+    "storage"
+  ],
+  "browser_specific_settings": {
+    "gecko": {
+      "strict_min_version": "109.0"
+    }
+  }
+}
