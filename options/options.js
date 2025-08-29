@@ -21,8 +21,8 @@ modeTabRadio.addEventListener('change', handleModeChange);
 async function loadSettings() {
     try {
         const settings = await browser.storage.sync.get({
-            windowSize: 50,
-            aspectRatioWidth: 4,
+            windowSize: 35,
+            aspectRatioWidth: 2,
             aspectRatioHeight: 3,
             openMode: 'window'
         });
@@ -44,7 +44,6 @@ async function loadSettings() {
         // update UI visibility based on mode
         updateWindowSettingsVisibility(settings.openMode);
     } catch (error) {
-        console.error('Error loading settings:', error);
     }
 }
 
@@ -98,6 +97,5 @@ async function saveSettings() {
 
         await browser.storage.sync.set(settings);
     } catch (error) {
-        console.error('Error saving settings:', error);
     }
 }

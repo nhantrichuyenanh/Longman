@@ -24,7 +24,6 @@ async function getUserSettings() {
     });
     return result;
   } catch (error) {
-    console.error('Error retrieving settings:', error);
     return {
       windowSize: 50,
       aspectRatioWidth: 4,
@@ -70,7 +69,6 @@ async function onCreated(windowInfo) {
       height: dimensions.height
     });
   } catch (error) {
-    console.error('Error updating window size:', error);
   }
 }
 
@@ -85,7 +83,6 @@ async function lookupSelection(text, url, currentTab) {
         url: url,
         active: true
       }).catch(error => {
-        console.error(`Error creating tab: ${error}`);
       });
     } else {
       // open in popup window (default behavior)
@@ -93,7 +90,6 @@ async function lookupSelection(text, url, currentTab) {
         url: url,
         type: "popup"
       }).then(onCreated).catch(error => {
-        console.error(`Error creating window: ${error}`);
       });
     }
   }
