@@ -1,8 +1,8 @@
 {
   "manifest_version": 2,
-  "version": "1.0.2",
+  "version": "1.0.3",
   "name": "LDOCE",
-  "description": "Select a word or phrase to look up its definition on Longman Dictionary of Contemporary English Online seamlessly.",
+  "description": "Select a word or phrase, right click, and choose LDOCE to look up its definition on Longman Dictionary of Contemporary English seamlessly.",
   "author": "Nhân Trí",
   "icons": {
     "16": "icon.png",

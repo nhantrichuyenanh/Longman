@@ -1,39 +1,64 @@
-// context menu entry
 browser.contextMenus.create({
   title: "LDOCE: %s",
   contexts: ["selection"],
   onclick: (info, tab) => {
     if (info) {
       const selectedText = info.selectionText;
-      // replace whitespace with hyphens for LDOCE URL format
-      const formattedText = selectedText.trim().replace(/\s+/g, '-');
-      const ldoceURL = `https://ldoceonline.com/dictionary/${formattedText}`;
-      lookupSelection(selectedText, ldoceURL, tab);
+      lookupSelection(selectedText, tab);
     }
   }
 });
 
-// get user preferences from storage with defaults
 async function getUserSettings() {
   try {
     const result = await browser.storage.sync.get({
       windowSize: 50,
       aspectRatioWidth: 4,
       aspectRatioHeight: 3,
-      openMode: 'window'
+      openMode: 'window',
+      language: 'en',
+      siteLocale: 'en'
     });
     return result;
   } catch (error) {
     return {
-      windowSize: 50,
-      aspectRatioWidth: 4,
+      windowSize: 35,
+      aspectRatioWidth: 2,
       aspectRatioHeight: 3,
-      openMode: 'window'
+      openMode: 'window',
+      language: 'en',
+      siteLocale: 'en'
     };
   }
 }
 
-// calculate window dimensions based on user settings
+function generateLdoceUrl(text, dictLanguage, siteLocale) {
+  // replace whitespace with hyphens for LDOCE URL format
+  const formattedText = text.trim().replace(/\s+/g, '-');
+
+  const pathMap = {
+    'en': `/dictionary/${formattedText}`,
+    'en-ja': `/dictionary/english-japanese/${formattedText}`,
+    'en-ko': `/dictionary/english-korean/${formattedText}`,
+    'en-es': `/dictionary/english-spanish/${formattedText}`,
+    'ja-en': `/dictionary/japanese-english/${formattedText}`,
+    'es-en': `/dictionary/spanish-english/${formattedText}`
+  };
+
+  const path = pathMap[dictLanguage] || pathMap['en'];
+
+  const localePrefixMap = {
+    'en': '',
+    'jp': '/jp',
+    'es-LA': '/es-LA',
+    'ko': '/ko'
+  };
+
+  const prefix = localePrefixMap[siteLocale] !== undefined ? localePrefixMap[siteLocale] : '';
+
+  return `https://www.ldoceonline.com${prefix}${path}`;
+}
+
 async function calculateWindowDimensions() {
   const settings = await getUserSettings();
   const sizeRatio = settings.windowSize / 100;
@@ -73,9 +98,11 @@ async function onCreated(windowInfo) {
 }
 
 // lookup the selected word based on user preferences
-async function lookupSelection(text, url, currentTab) {
+async function lookupSelection(text, currentTab) {
   if (text) {
     const settings = await getUserSettings();
+    // pass both dictionary type and site locale
+    const url = generateLdoceUrl(text, settings.language, settings.siteLocale);
 
     if (settings.openMode === 'tab') {
       // open in new tab

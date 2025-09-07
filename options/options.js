@@ -6,25 +6,28 @@ const aspectHeightInput = document.getElementById('aspectHeight');
 const modeWindowRadio = document.getElementById('modeWindow');
 const modeTabRadio = document.getElementById('modeTab');
 const windowSettings = document.getElementById('windowSettings');
+const languageRadios = document.querySelectorAll('input[name="language"]');
+const languageOptions = document.querySelectorAll('.language-option');
+const siteLocaleRadios = document.querySelectorAll('input[name="siteLocale"]');
 
-// load saved settings when page loads
 document.addEventListener('DOMContentLoaded', loadSettings);
-
-// add event listeners for all form inputs
 windowSizeSlider.addEventListener('input', handleSizeChange);
 aspectWidthInput.addEventListener('input', handleRatioChange);
 aspectHeightInput.addEventListener('input', handleRatioChange);
 modeWindowRadio.addEventListener('change', handleModeChange);
 modeTabRadio.addEventListener('change', handleModeChange);
+languageRadios.forEach(radio => {radio.addEventListener('change', handleLanguageChange);});
+siteLocaleRadios.forEach(r => r.addEventListener('change', handleSiteLocaleChange));
 
-// load settings from storage and populate form
 async function loadSettings() {
     try {
         const settings = await browser.storage.sync.get({
             windowSize: 35,
             aspectRatioWidth: 2,
             aspectRatioHeight: 3,
-            openMode: 'window'
+            openMode: 'window',
+            language: 'en',
+            siteLocale: 'en'
         });
 
         windowSizeSlider.value = settings.windowSize;
@@ -32,7 +35,6 @@ async function loadSettings() {
         aspectWidthInput.value = settings.aspectRatioWidth;
         aspectHeightInput.value = settings.aspectRatioHeight;
 
-        // set radio button selection
         if (settings.openMode === 'tab') {
             modeTabRadio.checked = true;
             modeWindowRadio.checked = false;
@@ -41,20 +43,49 @@ async function loadSettings() {
             modeTabRadio.checked = false;
         }
 
-        // update UI visibility based on mode
+        const selectedLanguageRadio = document.querySelector(`input[name="language"][value="${settings.language}"]`);
+        if (selectedLanguageRadio) {
+            selectedLanguageRadio.checked = true;
+            updateLanguageSelection(settings.language);
+        }
+
+        const selectedSiteRadio = document.querySelector(`input[name="siteLocale"][value="${settings.siteLocale}"]`);
+        if (selectedSiteRadio) {
+            selectedSiteRadio.checked = true;
+        }
+
         updateWindowSettingsVisibility(settings.openMode);
     } catch (error) {
     }
 }
 
-// handle open mode changes
+function handleLanguageChange() {
+    const selectedLanguage = document.querySelector('input[name="language"]:checked').value;
+    updateLanguageSelection(selectedLanguage);
+    saveSettings();
+}
+
+function handleSiteLocaleChange() {
+    saveSettings();
+}
+
+function updateLanguageSelection(selectedLanguage) {
+    languageOptions.forEach(option => {
+        const radio = option.querySelector('input[type="radio"]');
+        if (radio.value === selectedLanguage) {
+            option.classList.add('selected');
+        } else {
+            option.classList.remove('selected');
+        }
+    });
+}
+
 function handleModeChange() {
     const selectedMode = modeWindowRadio.checked ? 'window' : 'tab';
     updateWindowSettingsVisibility(selectedMode);
     saveSettings();
 }
 
-// update visibility of window settings based on selected mode
 function updateWindowSettingsVisibility(mode) {
     if (mode === 'window') {
         windowSettings.classList.remove('hidden');
@@ -63,36 +94,35 @@ function updateWindowSettingsVisibility(mode) {
     }
 }
 
-// handle window size slider changes
 function handleSizeChange() {
     const size = windowSizeSlider.value;
     sizeDisplay.textContent = size + '%';
     saveSettings();
 }
 
-// handle aspect ratio input changes
 function handleRatioChange() {
-    // validate inputs to ensure they are positive numbers
     const width = Math.max(0.1, parseFloat(aspectWidthInput.value) || 1);
     const height = Math.max(0.1, parseFloat(aspectHeightInput.value) || 1);
 
-    // update the inputs with validated values
     aspectWidthInput.value = width;
     aspectHeightInput.value = height;
 
     saveSettings();
 }
 
-// save all current settings to storage
 async function saveSettings() {
     try {
         const selectedMode = modeWindowRadio.checked ? 'window' : 'tab';
+        const selectedLanguage = document.querySelector('input[name="language"]:checked').value;
+        const selectedSiteLocale = document.querySelector('input[name="siteLocale"]:checked').value;
 
         const settings = {
             windowSize: parseInt(windowSizeSlider.value),
             aspectRatioWidth: parseFloat(aspectWidthInput.value),
             aspectRatioHeight: parseFloat(aspectHeightInput.value),
-            openMode: selectedMode
+            openMode: selectedMode,
+            language: selectedLanguage,
+            siteLocale: selectedSiteLocale
         };
 
         await browser.storage.sync.set(settings);

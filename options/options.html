@@ -12,19 +12,22 @@
             font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
             background: #fff;
             color: #15141a;
+            overflow-x: hidden;
         }
 
         .container {
-            width: 340px;
+            max-width: 800px;
+            width: 100%;
             margin: 0 auto;
+            box-sizing: border-box;
         }
 
         .card {
             background: #f7f7f9;
             border-radius: 12px;
             padding: 16px;
-            margin-bottom: 16px;
             border: 1px solid rgba(0, 0, 0, 0.08);
+            margin-bottom: 0;
         }
 
         .card label {
@@ -32,6 +35,63 @@
             font-weight: 500;
             margin-bottom: 8px;
             display: block;
+        }
+
+        .language-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+            margin-bottom: -6px;
+        }
+
+        .language-option {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            padding: 14px 10px;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.16s ease;
+            border: 2px solid transparent;
+            background: #fff;
+            box-sizing: border-box;
+            min-height: 84px;
+            text-align: center;
+        }
+
+        .language-option:hover {
+            background: color-mix(in srgb, AccentColor 10%, #fff);
+        }
+
+        .language-option.selected {
+            border-color: AccentColor;
+            background: color-mix(in srgb, AccentColor 10%, #fff);
+        }
+
+        .language-option .flag {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 48px;
+            height: 48px;
+            font-size: 28px;
+            line-height: 48px;
+            margin: 0;
+            transform: translateY(0);
+            will-change: transform;
+        }
+
+        .language-option .label {
+            font-size: 0.75rem;
+            text-align: center;
+            line-height: 1.2;
+            font-weight: 500;
+        }
+
+        .language-option input[type="radio"] {
+            display: none;
         }
 
         .label-row {
@@ -53,16 +113,22 @@
             background: #ddd;
             outline: none;
             appearance: none;
+            accent-color: AccentColor;
         }
 
         input[type="range"]::-webkit-slider-thumb {
             width: 18px;
             height: 18px;
             border-radius: 50%;
-            background: #0060df;
+            background: AccentColor;
             cursor: pointer;
             appearance: none;
             border: none;
+        }
+
+        input[type="radio"],
+        input[type="checkbox"] {
+            accent-color: AccentColor;
         }
 
         .ratio-inputs {
@@ -122,18 +188,15 @@
         }
 
         .window-settings {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
             transition: opacity 0.3s, height 0.3s;
         }
 
         .window-settings.hidden {
             opacity: 0.5;
             pointer-events: none;
-        }
-
-        .info {
-            font-size: 0.85rem;
-            text-align: center;
-            padding: 12px;
         }
 
         /* DARK MODE */
@@ -148,6 +211,20 @@
                 border: 1px solid #444;
             }
 
+            .language-option {
+                background: #1c1b22;
+                border-color: transparent;
+            }
+
+            .language-option:hover {
+                background: color-mix(in srgb, AccentColor 10%, #1c1b22);
+            }
+
+            .language-option.selected {
+                border-color: AccentColor;
+                background: color-mix(in srgb, AccentColor 10%, #1c1b22);
+            }
+
             .size-display {
                 color: #bbb;
             }
@@ -157,7 +234,7 @@
             }
 
             input[type="range"]::-webkit-slider-thumb {
-                background: #00ddff;
+                background: AccentColor;
             }
 
             .ratio-inputs input {
@@ -169,59 +246,135 @@
             .radio-option:hover {
                 background: color-mix(in srgb, AccentColor 10%, transparent);
             }
+        }
 
-            .info {
-                color: #bbb;
-            }
+        .main-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+        }
+
+        .left-column,
+        .right-column {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
         }
     </style>
 </head>
 
 <body>
     <div class="container">
-
-        <!-- Open Mode Selection -->
-        <div class="card" style="padding: 0px 16px;">
-            <div class="radio-group">
-                <div class="radio-option">
-                    <input type="radio" id="modeWindow" name="openMode" value="window" checked>
-                    <label for="modeWindow">Window</label>
+        <div class="main-grid">
+            <!-- Left Column -->
+            <div class="left-column">
+                <!-- Language Selection -->
+                <div class="card">
+                    <div class="language-grid">
+                        <label class="language-option selected" for="lang-en">
+                            <input type="radio" id="lang-en" name="language" value="en" checked>
+                            <div class="flag">🇬🇧</div>
+                            <div class="label">EN</div>
+                        </label>
+                        <label class="language-option" for="lang-en-es">
+                            <input type="radio" id="lang-en-es" name="language" value="en-es">
+                            <div class="flag">🇪🇸</div>
+                            <div class="label">EN-ES</div>
+                        </label>
+                        <label class="language-option" for="lang-es-en">
+                            <input type="radio" id="lang-es-en" name="language" value="es-en">
+                            <div class="flag">🇪🇸</div>
+                            <div class="label">ES-EN</div>
+                        </label>
+                        <label class="language-option" for="lang-en-ko">
+                            <input type="radio" id="lang-en-ko" name="language" value="en-ko">
+                            <div class="flag">🇰🇷</div>
+                            <div class="label">EN-KO</div>
+                        </label>
+                        <label class="language-option" for="lang-en-ja">
+                            <input type="radio" id="lang-en-ja" name="language" value="en-ja">
+                            <div class="flag">🇯🇵</div>
+                            <div class="label">EN-JA</div>
+                        </label>
+                        <label class="language-option" for="lang-ja-en">
+                            <input type="radio" id="lang-ja-en" name="language" value="ja-en">
+                            <div class="flag">🇯🇵</div>
+                            <div class="label">JA-EN</div>
+                        </label>
+                    </div>
                 </div>
-                <div class="radio-option">
-                    <input type="radio" id="modeTab" name="openMode" value="tab">
-                    <label for="modeTab">Tab</label>
+
+                <!-- Site Locale Selection -->
+                <div class="card">
+                    <div class="radio-group"
+                        style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px; height: auto;">
+                        <div class="radio-option">
+                            <input type="radio" id="site-en" name="siteLocale" value="en" checked>
+                            <label for="site-en">English</label>
+                        </div>
+
+                        <div class="radio-option">
+                            <input type="radio" id="site-es" name="siteLocale" value="es-LA">
+                            <label for="site-es">Español latino</label>
+                        </div>
+
+                        <div class="radio-option">
+                            <input type="radio" id="site-kr" name="siteLocale" value="ko">
+                            <label for="site-kr">한국인</label>
+                        </div>
+
+                        <div class="radio-option">
+                            <input type="radio" id="site-jp" name="siteLocale" value="jp">
+                            <label for="site-jp">日本語</label>
+                        </div>
+                    </div>
                 </div>
             </div>
-        </div>
-
-        <!-- Window Settings (shown only when Window mode is selected) -->
-        <div class="window-settings" id="windowSettings">
-            <!-- Window Size -->
-            <div class="card">
-                <div class="label-row">
-                    <label for="windowSize">Window Size (% of screen)</label>
-                    <div class="size-display" id="sizeDisplay">35%</div>
+            <!-- Right Column -->
+            <div class="right-column">
+                <!-- Open Mode Selection -->
+                <div class="card" style="padding: 0px 16px;">
+                    <div class="radio-group">
+                        <div class="radio-option">
+                            <input type="radio" id="modeWindow" name="openMode" value="window" checked>
+                            <label for="modeWindow">Window</label>
+                        </div>
+                        <div class="radio-option">
+                            <input type="radio" id="modeTab" name="openMode" value="tab">
+                            <label for="modeTab">Tab</label>
+                        </div>
+                    </div>
                 </div>
-                <input type="range" id="windowSize" min="0" max="100" value="35">
-            </div>
 
-            <!-- Aspect Ratio -->
-            <div class="card">
-                <label>Aspect Ratio (Width : Height)</label>
-                <div class="ratio-inputs">
-                    <input type="number" id="aspectWidth" min="1" step="1" value="2">
-                    <span class="ratio-separator">:</span>
-                    <input type="number" id="aspectHeight" min="1" step="1" value="3">
+                <!-- Window Settings (only shown when Window is selected) -->
+                <div class="window-settings" id="windowSettings">
+                    <!-- Window Size -->
+                    <div class="card">
+                        <div class="label-row">
+                            <label for="windowSize">Window Size (% of screen)</label>
+                            <div class="size-display" id="sizeDisplay">50%</div>
+                        </div>
+                        <input type="range" id="windowSize" min="0" max="100" value="50">
+                    </div>
+
+                    <!-- Aspect Ratio -->
+                    <div class="card">
+                        <label>Aspect Ratio (Width : Height)</label>
+                        <div class="ratio-inputs">
+                            <input type="number" id="aspectWidth" min="1" step="1" value="2">
+                            <span class="ratio-separator">:</span>
+                            <input type="number" id="aspectHeight" min="1" step="1" value="3">
+                        </div>
+                    </div>
+
+                    <!-- Info -->
+                    <div class="card" style="text-align: center; padding: 12px;">
+                        Changes are automatically saved.
+                    </div>
                 </div>
             </div>
-        </div>
-
-        <!-- Info -->
-        <div class="card info">
-            Changes apply immediately.
         </div>
     </div>
-
     <script src="options.js"></script>
 </body>
 
