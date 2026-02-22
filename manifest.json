@@ -1,6 +1,6 @@
 {
   "manifest_version": 2,
-  "version": "1.0.3",
+  "version": "1.0.4",
   "name": "LDOCE",
   "description": "Select a word or phrase, right click, and choose LDOCE to look up its definition on Longman Dictionary of Contemporary English seamlessly.",
   "author": "Nhân Trí",
@@ -25,7 +25,8 @@
   "browser_specific_settings": {
     "gecko": {
       "id": "{ec97e516-7ff1-4625-8058-6546ee31068b}",
-      "strict_min_version": "109.0"
+      "strict_min_version": "140.0",
+      "data_collection_permissions": {"required": ["none"]}
     }
   }
 }
